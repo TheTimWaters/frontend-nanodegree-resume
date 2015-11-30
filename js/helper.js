@@ -76,22 +76,21 @@ clickLocations = [];
 
 function logClicks(x,y) {
   clickLocations.push(
-    {
-      x: x,
-      y: y
-    }
+  {
+    x: x,
+    y: y
+  }
   );
   console.log('x location: ' + x + '; y location: ' + y);
 }
 
 $(document).click(function(loc) {
-  // your code goes here!
+  logClicks(loc.pageX, loc.pageY);
 });
 
 
-
 /*
-This is the fun part. Here's where we generate the custom Google Map for the website.
+Here's where we generate the custom Google Map for the website.
 See the documentation below for more details.
 https://developers.google.com/maps/documentation/javascript/reference
 */
@@ -168,11 +167,13 @@ function initializeMap() {
     // about a location.
     var infoWindow = new google.maps.InfoWindow({
       content: name
+      //content: contentStringTwo
     });
 
-    // hmmmm, I wonder what this is about...
     google.maps.event.addListener(marker, 'click', function() {
       // your code goes here!
+      infoWindow.close();
+      infoWindow.open(map, marker);
     });
 
     // this is where the pin actually gets added to the map.
@@ -228,6 +229,13 @@ function initializeMap() {
   // the locations array
   pinPoster(locations);
 
+  // Vanilla JS way to listen for resizing of the window
+  // and adjust map bounds
+  window.addEventListener('resize', function(e) {
+    //Make sure the map bounds get updated on page resize
+    map.fitBounds(mapBounds);
+  });
+
 }
 
 /*
@@ -235,11 +243,4 @@ Uncomment the code below when you're ready to implement a Google Map!
 */
 
 // Calls the initializeMap() function when the page loads
-//window.addEventListener('load', initializeMap);
-
-// Vanilla JS way to listen for resizing of the window
-// and adjust map bounds
-//window.addEventListener('resize', function(e) {
-  //Make sure the map bounds get updated on page resize
-//  map.fitBounds(mapBounds);
-//});
+window.addEventListener('load', initializeMap);
